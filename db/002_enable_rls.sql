@@ -1,0 +1,4 @@
+-- Enable Row Level Security on all tables
+ALTER TABLE expenses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE monthly_payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE paydays ENABLE ROW LEVEL SECURITY;
