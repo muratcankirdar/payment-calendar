@@ -19,6 +19,7 @@ export interface DbExpense {
   currency: string
   date: string
   is_recurring: boolean
+  end_date: string | null
   category: string
   created_at: string
   updated_at: string

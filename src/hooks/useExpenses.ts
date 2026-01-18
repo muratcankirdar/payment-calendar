@@ -13,6 +13,7 @@ function dbToExpense(db: DbExpense): Expense {
     currency: db.currency as Currency,
     date: db.date,
     isRecurring: db.is_recurring,
+    endDate: db.end_date,
     category: db.category as Expense['category'],
   }
 }
@@ -66,6 +67,7 @@ export function useExpenses() {
           currency: expense.currency,
           date: expense.date,
           is_recurring: expense.isRecurring,
+          end_date: expense.endDate || null,
           category: expense.category,
         })
         .select()
@@ -94,6 +96,7 @@ export function useExpenses() {
           currency: expense.currency,
           date: expense.date,
           is_recurring: expense.isRecurring,
+          end_date: expense.endDate || null,
           category: expense.category,
         })
         .eq('id', id)

@@ -14,6 +14,7 @@ export interface Expense {
   currency: Currency
   date: string // ISO date string for one-time, or day of month (1-31) stored as "recurring-DD"
   isRecurring: boolean
+  endDate?: string | null // Optional end date for recurring expenses (ISO date string, e.g., "2025-12")
   category: 'bill' | 'rent' | 'subscription' | 'other'
 }
 

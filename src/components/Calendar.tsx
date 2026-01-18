@@ -38,7 +38,14 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
     return expenses.filter(expense => {
       if (expense.isRecurring) {
         const recurringDay = parseInt(expense.date.split('-')[1])
-        return recurringDay === day
+        if (recurringDay !== day) return false
+
+        // Check if expense has ended
+        if (expense.endDate) {
+          // endDate is in YYYY-MM format, compare with current month
+          if (monthKey > expense.endDate) return false
+        }
+        return true
       }
       return expense.date === dateStr
     })
@@ -88,7 +95,7 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
           return (
             <div
               key={index}
-              className={`min-h-[120px] border-b border-r border-border p-2 transition-colors ${
+              className={`group min-h-[120px] border-b border-r border-border p-2 transition-colors ${
                 day ? 'cursor-pointer hover:bg-accent' : 'bg-muted/50'
               } ${dayIsToday ? 'bg-primary/10' : ''}`}
               onClick={() => day && onDayClick(new Date(year, month, day))}
@@ -105,34 +112,40 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
                       </Badge>
                     )}
                   </div>
-                  <div className="space-y-1">
-                    {dayExpenses.map(expense => {
-                      const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
-                      return (
-                        <div
-                          key={expense.id}
-                          className={`text-xs p-1.5 rounded border cursor-pointer transition-all hover:scale-[1.02] ${getExpenseStyle(expense)}`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            onExpenseClick(expense)
-                          }}
-                        >
-                          <div className="truncate font-medium">{expense.name}</div>
-                          <div className="flex items-center justify-between">
-                            <span>{CURRENCY_SYMBOLS[expense.currency]}{expense.amount}</span>
-                            {isPartiallyPaid(expense, paidAmount) && (
-                              <span className="text-yellow-600 dark:text-yellow-400 text-[10px]">
-                                {Math.round((paidAmount / expense.amount) * 100)}%
-                              </span>
-                            )}
-                            {isFullyPaid(expense, paidAmount) && (
-                              <span className="text-green-600 dark:text-green-400 text-[10px]">Paid</span>
-                            )}
+                  {dayExpenses.length === 0 ? (
+                    <div className="flex items-center justify-center h-[80px] opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-sm text-muted-foreground">+ Add Expense</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {dayExpenses.map(expense => {
+                        const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
+                        return (
+                          <div
+                            key={expense.id}
+                            className={`text-xs p-1.5 rounded border cursor-pointer transition-all hover:scale-[1.02] ${getExpenseStyle(expense)}`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onExpenseClick(expense)
+                            }}
+                          >
+                            <div className="truncate font-medium">{expense.name}</div>
+                            <div className="flex items-center justify-between">
+                              <span>{CURRENCY_SYMBOLS[expense.currency]}{expense.amount}</span>
+                              {isPartiallyPaid(expense, paidAmount) && (
+                                <span className="text-yellow-600 dark:text-yellow-400 text-[10px]">
+                                  {Math.round((paidAmount / expense.amount) * 100)}%
+                                </span>
+                              )}
+                              {isFullyPaid(expense, paidAmount) && (
+                                <span className="text-green-600 dark:text-green-400 text-[10px]">Paid</span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </>
               )}
             </div>

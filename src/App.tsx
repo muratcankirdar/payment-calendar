@@ -21,7 +21,6 @@ import {
   Wallet,
   CalendarDays,
   Table2,
-  PiggyBank,
   TrendingDown,
   CheckCircle2,
   Clock,
@@ -131,8 +130,16 @@ function AppContent() {
   const monthYear = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
   const monthKey = getMonthKey(currentDate)
 
+  // Filter expenses for current month (respect endDate for recurring)
+  const activeExpenses = expenses.filter(expense => {
+    if (expense.isRecurring && expense.endDate) {
+      return monthKey <= expense.endDate
+    }
+    return true
+  })
+
   // Group expenses by currency for summary (using month-specific payments)
-  const expensesByCurrency = expenses.reduce((acc, expense) => {
+  const expensesByCurrency = activeExpenses.reduce((acc, expense) => {
     if (!acc[expense.currency]) {
       acc[expense.currency] = { total: 0, paid: 0, unpaid: 0, partial: 0 }
     }
@@ -205,10 +212,7 @@ function AppContent() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PiggyBank className="h-5 w-5" />
-                  Summary
-                </CardTitle>
+                <CardTitle>Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {Object.entries(expensesByCurrency).length > 0 ? (
@@ -233,11 +237,8 @@ function AppContent() {
                           {CURRENCY_SYMBOLS[currency as Currency]}{totals.paid.toFixed(2)}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center text-destructive">
-                        <span className="flex items-center gap-1">
-                          <X className="h-3 w-3" />
-                          Remaining
-                        </span>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Remaining</span>
                         <span className="font-semibold">
                           {CURRENCY_SYMBOLS[currency as Currency]}{totals.unpaid.toFixed(2)}
                         </span>

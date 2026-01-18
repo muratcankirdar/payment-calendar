@@ -79,6 +79,8 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
     return new Date().toISOString().split('T')[0]
   })
   const [category, setCategory] = useState<Expense['category']>(expense?.category || 'bill')
+  const [hasEndDate, setHasEndDate] = useState(!!expense?.endDate)
+  const [endDate, setEndDate] = useState(expense?.endDate || '')
 
   useEffect(() => {
     if (selectedDate && !expense) {
@@ -105,6 +107,7 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
       currency,
       date: isRecurring ? `recurring-${recurringDay.padStart(2, '0')}` : date,
       isRecurring,
+      endDate: isRecurring && hasEndDate ? endDate : null,
       category,
     })
   }
@@ -241,21 +244,53 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
           </div>
 
           {isRecurring ? (
-            <div className="space-y-2">
-              <Label htmlFor="recurringDay" className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                Day of Month
-              </Label>
-              <Select value={recurringDay} onValueChange={setRecurringDay}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select day" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                    <SelectItem key={day} value={String(day)}>{day}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="recurringDay" className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                  Day of Month
+                </Label>
+                <Select value={recurringDay} onValueChange={setRecurringDay}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select day" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                      <SelectItem key={day} value={String(day)}>{day}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="hasEndDate"
+                  checked={hasEndDate}
+                  onCheckedChange={(checked) => setHasEndDate(checked as boolean)}
+                />
+                <Label htmlFor="hasEndDate" className="text-sm font-normal cursor-pointer">
+                  Set end date
+                </Label>
+              </div>
+
+              {hasEndDate && (
+                <div className="space-y-2">
+                  <Label htmlFor="endDate" className="flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                    End Month
+                  </Label>
+                  <Input
+                    id="endDate"
+                    type="month"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required={hasEndDate}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Expense will appear until this month (inclusive)
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-2">
