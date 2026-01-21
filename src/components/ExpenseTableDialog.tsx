@@ -1,12 +1,13 @@
-import { Expense, CURRENCY_SYMBOLS, isFullyPaid, isPartiallyPaid, getPaidAmountForExpense } from '@/types'
+import {
+  Expense,
+  CURRENCY_SYMBOLS,
+  isFullyPaid,
+  isPartiallyPaid,
+  getPaidAmountForExpense,
+} from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -25,13 +26,25 @@ interface ExpenseTableDialogProps {
   monthlyPayments: Record<string, number>
 }
 
-export function ExpenseTableDialog({ open, onClose, expenses, monthKey, monthlyPayments }: ExpenseTableDialogProps) {
-  const getCategoryVariant = (category: Expense['category']): "destructive" | "secondary" | "default" | "outline" => {
+export function ExpenseTableDialog({
+  open,
+  onClose,
+  expenses,
+  monthKey,
+  monthlyPayments,
+}: ExpenseTableDialogProps) {
+  const getCategoryVariant = (
+    category: Expense['category'],
+  ): 'destructive' | 'secondary' | 'default' | 'outline' => {
     switch (category) {
-      case 'bill': return 'destructive'
-      case 'rent': return 'secondary'
-      case 'subscription': return 'default'
-      default: return 'outline'
+      case 'bill':
+        return 'destructive'
+      case 'rent':
+        return 'secondary'
+      case 'subscription':
+        return 'default'
+      default:
+        return 'outline'
     }
   }
 
@@ -101,7 +114,8 @@ export function ExpenseTableDialog({ open, onClose, expenses, monthKey, monthlyP
                         )}
                       </TableCell>
                       <TableCell className="text-right font-semibold">
-                        {CURRENCY_SYMBOLS[expense.currency]}{expense.amount.toFixed(2)}
+                        {CURRENCY_SYMBOLS[expense.currency]}
+                        {expense.amount.toFixed(2)}
                       </TableCell>
                       <TableCell className="text-center">
                         {fullyPaid ? (
@@ -127,9 +141,7 @@ export function ExpenseTableDialog({ open, onClose, expenses, monthKey, monthlyP
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              No expenses yet.
-            </div>
+            <div className="text-center py-8 text-muted-foreground">No expenses yet.</div>
           )}
         </div>
         <div className="flex justify-end pt-4 border-t">

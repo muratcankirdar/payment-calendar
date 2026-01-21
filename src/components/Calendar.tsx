@@ -1,4 +1,11 @@
-import { Expense, CURRENCY_SYMBOLS, isFullyPaid, isPartiallyPaid, getMonthKey, getPaidAmountForExpense } from '@/types'
+import {
+  Expense,
+  CURRENCY_SYMBOLS,
+  isFullyPaid,
+  isPartiallyPaid,
+  getMonthKey,
+  getPaidAmountForExpense,
+} from '@/types'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -13,7 +20,14 @@ interface CalendarProps {
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDayClick, onExpenseClick }: CalendarProps) {
+export function Calendar({
+  currentDate,
+  expenses,
+  payDays,
+  monthlyPayments,
+  onDayClick,
+  onExpenseClick,
+}: CalendarProps) {
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
   const monthKey = getMonthKey(currentDate)
@@ -35,7 +49,7 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
 
   const getExpensesForDay = (day: number): Expense[] => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-    return expenses.filter(expense => {
+    return expenses.filter((expense) => {
       if (expense.isRecurring) {
         const recurringDay = parseInt(expense.date.split('-')[1])
         if (recurringDay !== day) return false
@@ -62,10 +76,14 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
   }
 
   const getExpenseStyle = (expense: Expense): string => {
-    const baseStyle = expense.category === 'bill' ? 'bg-destructive/10 border-destructive/20 text-destructive' :
-      expense.category === 'rent' ? 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400' :
-      expense.category === 'subscription' ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' :
-      'bg-muted border-border text-muted-foreground'
+    const baseStyle =
+      expense.category === 'bill'
+        ? 'bg-destructive/10 border-destructive/20 text-destructive'
+        : expense.category === 'rent'
+          ? 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400'
+          : expense.category === 'subscription'
+            ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400'
+            : 'bg-muted border-border text-muted-foreground'
 
     const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
     if (isFullyPaid(expense, paidAmount)) {
@@ -80,7 +98,7 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
   return (
     <Card>
       <div className="grid grid-cols-7 border-b border-border">
-        {DAYS.map(day => (
+        {DAYS.map((day) => (
           <div key={day} className="p-3 text-center font-semibold text-muted-foreground text-sm">
             {day}
           </div>
@@ -103,11 +121,16 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
               {day && (
                 <>
                   <div className="flex items-center justify-between mb-1">
-                    <span className={`text-sm font-medium ${dayIsToday ? 'text-primary' : 'text-foreground'}`}>
+                    <span
+                      className={`text-sm font-medium ${dayIsToday ? 'text-primary' : 'text-foreground'}`}
+                    >
                       {day}
                     </span>
                     {dayIsPayDay && (
-                      <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-xs px-1.5 py-0">
+                      <Badge
+                        variant="default"
+                        className="bg-green-500 hover:bg-green-600 text-xs px-1.5 py-0"
+                      >
                         Pay
                       </Badge>
                     )}
@@ -118,8 +141,12 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      {dayExpenses.map(expense => {
-                        const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
+                      {dayExpenses.map((expense) => {
+                        const paidAmount = getPaidAmountForExpense(
+                          expense,
+                          monthKey,
+                          monthlyPayments,
+                        )
                         return (
                           <div
                             key={expense.id}
@@ -131,14 +158,19 @@ export function Calendar({ currentDate, expenses, payDays, monthlyPayments, onDa
                           >
                             <div className="truncate font-medium">{expense.name}</div>
                             <div className="flex items-center justify-between">
-                              <span>{CURRENCY_SYMBOLS[expense.currency]}{expense.amount}</span>
+                              <span>
+                                {CURRENCY_SYMBOLS[expense.currency]}
+                                {expense.amount}
+                              </span>
                               {isPartiallyPaid(expense, paidAmount) && (
                                 <span className="text-yellow-600 dark:text-yellow-400 text-[10px]">
                                   {Math.round((paidAmount / expense.amount) * 100)}%
                                 </span>
                               )}
                               {isFullyPaid(expense, paidAmount) && (
-                                <span className="text-green-600 dark:text-green-400 text-[10px]">Paid</span>
+                                <span className="text-green-600 dark:text-green-400 text-[10px]">
+                                  Paid
+                                </span>
                               )}
                             </div>
                           </div>

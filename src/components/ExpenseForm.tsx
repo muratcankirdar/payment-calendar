@@ -4,12 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   Select,
   SelectContent,
@@ -32,7 +27,7 @@ import {
   Tv,
   MoreHorizontal,
   CheckCircle2,
-  CircleDollarSign
+  CircleDollarSign,
 } from 'lucide-react'
 
 interface ExpenseFormProps {
@@ -46,7 +41,16 @@ interface ExpenseFormProps {
   onDelete?: () => void
 }
 
-export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayments, onSave, onSaveMonthlyPayment, onCancel, onDelete }: ExpenseFormProps) {
+export function ExpenseForm({
+  expense,
+  selectedDate,
+  currentDate,
+  monthlyPayments,
+  onSave,
+  onSaveMonthlyPayment,
+  onCancel,
+  onDelete,
+}: ExpenseFormProps) {
   const monthKey = getMonthKey(currentDate)
 
   // Get the initial paid amount - for recurring expenses, use monthly payment
@@ -198,7 +202,10 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
               <Tag className="h-4 w-4 text-muted-foreground" />
               Category
             </Label>
-            <Select value={category} onValueChange={(value) => setCategory(value as Expense['category'])}>
+            <Select
+              value={category}
+              onValueChange={(value) => setCategory(value as Expense['category'])}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -237,7 +244,10 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
               checked={isRecurring}
               onCheckedChange={(checked) => setIsRecurring(checked as boolean)}
             />
-            <Label htmlFor="isRecurring" className="text-sm font-normal cursor-pointer flex items-center gap-2">
+            <Label
+              htmlFor="isRecurring"
+              className="text-sm font-normal cursor-pointer flex items-center gap-2"
+            >
               <RefreshCw className="h-4 w-4 text-muted-foreground" />
               Recurring monthly expense
             </Label>
@@ -255,8 +265,10 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
                     <SelectValue placeholder="Select day" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                      <SelectItem key={day} value={String(day)}>{day}</SelectItem>
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                      <SelectItem key={day} value={String(day)}>
+                        {day}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -309,7 +321,9 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
           )}
 
           {/* Payment Section */}
-          <Card className={`${fullyPaid ? 'border-green-500 bg-green-500/5' : partiallyPaid ? 'border-yellow-500 bg-yellow-500/5' : ''}`}>
+          <Card
+            className={`${fullyPaid ? 'border-green-500 bg-green-500/5' : partiallyPaid ? 'border-yellow-500 bg-yellow-500/5' : ''}`}
+          >
             <CardContent className="pt-4 space-y-4">
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-2 text-base font-semibold">
@@ -323,9 +337,7 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
                   </span>
                 )}
                 {partiallyPaid && (
-                  <span className="text-yellow-600 text-sm font-medium">
-                    Partially Paid
-                  </span>
+                  <span className="text-yellow-600 text-sm font-medium">Partially Paid</span>
                 )}
               </div>
 
@@ -362,8 +374,11 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
 
                 <div className="space-y-1">
                   <Label className="text-sm text-muted-foreground">Remaining</Label>
-                  <div className={`h-9 flex items-center px-3 rounded-md border bg-muted/50 font-semibold ${remainingAmount > 0 ? 'text-destructive' : 'text-green-600'}`}>
-                    {CURRENCY_SYMBOLS[currency]}{remainingAmount.toFixed(2)}
+                  <div
+                    className={`h-9 flex items-center px-3 rounded-md border bg-muted/50 font-semibold ${remainingAmount > 0 ? 'text-destructive' : 'text-green-600'}`}
+                  >
+                    {CURRENCY_SYMBOLS[currency]}
+                    {remainingAmount.toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -371,7 +386,7 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
               <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant={fullyPaid ? "outline" : "default"}
+                  variant={fullyPaid ? 'outline' : 'default'}
                   size="sm"
                   className="flex-1"
                   onClick={handleMarkFullyPaid}
@@ -405,12 +420,7 @@ export function ExpenseForm({ expense, selectedDate, currentDate, monthlyPayment
           </div>
 
           {expense && onDelete && (
-            <Button
-              type="button"
-              variant="destructive"
-              className="w-full"
-              onClick={onDelete}
-            >
+            <Button type="button" variant="destructive" className="w-full" onClick={onDelete}>
               <Trash2 className="h-4 w-4 mr-2" />
               Delete Expense
             </Button>

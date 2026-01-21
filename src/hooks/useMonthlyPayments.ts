@@ -48,25 +48,23 @@ export function useMonthlyPayments() {
   const setMonthlyPayment = async (
     expenseId: string,
     monthKey: string,
-    amount: number
+    amount: number,
   ): Promise<boolean> => {
     if (!user) return false
 
     try {
       // Use upsert to handle both insert and update
-      const { error } = await supabase
-        .from('monthly_payments')
-        .upsert(
-          {
-            user_id: user.id,
-            expense_id: expenseId,
-            month_key: monthKey,
-            amount,
-          },
-          {
-            onConflict: 'expense_id,month_key',
-          }
-        )
+      const { error } = await supabase.from('monthly_payments').upsert(
+        {
+          user_id: user.id,
+          expense_id: expenseId,
+          month_key: monthKey,
+          amount,
+        },
+        {
+          onConflict: 'expense_id,month_key',
+        },
+      )
 
       if (error) throw error
 

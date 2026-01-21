@@ -9,7 +9,14 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useExpenses } from '@/hooks/useExpenses'
 import { useMonthlyPayments } from '@/hooks/useMonthlyPayments'
 import { usePaydays } from '@/hooks/usePaydays'
-import { Expense, CURRENCY_SYMBOLS, Currency, isPartiallyPaid, getMonthKey, getPaidAmountForExpense } from '@/types'
+import {
+  Expense,
+  CURRENCY_SYMBOLS,
+  Currency,
+  isPartiallyPaid,
+  getMonthKey,
+  getPaidAmountForExpense,
+} from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -131,7 +138,7 @@ function AppContent() {
   const monthKey = getMonthKey(currentDate)
 
   // Filter expenses for current month (respect endDate for recurring)
-  const activeExpenses = expenses.filter(expense => {
+  const activeExpenses = expenses.filter((expense) => {
     if (expense.isRecurring && expense.endDate) {
       return monthKey <= expense.endDate
     }
@@ -139,19 +146,22 @@ function AppContent() {
   })
 
   // Group expenses by currency for summary (using month-specific payments)
-  const expensesByCurrency = activeExpenses.reduce((acc, expense) => {
-    if (!acc[expense.currency]) {
-      acc[expense.currency] = { total: 0, paid: 0, unpaid: 0, partial: 0 }
-    }
-    const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
-    acc[expense.currency].total += expense.amount
-    acc[expense.currency].paid += paidAmount
-    acc[expense.currency].unpaid += (expense.amount - paidAmount)
-    if (isPartiallyPaid(expense, paidAmount)) {
-      acc[expense.currency].partial += 1
-    }
-    return acc
-  }, {} as Record<Currency, { total: number; paid: number; unpaid: number; partial: number }>)
+  const expensesByCurrency = activeExpenses.reduce(
+    (acc, expense) => {
+      if (!acc[expense.currency]) {
+        acc[expense.currency] = { total: 0, paid: 0, unpaid: 0, partial: 0 }
+      }
+      const paidAmount = getPaidAmountForExpense(expense, monthKey, monthlyPayments)
+      acc[expense.currency].total += expense.amount
+      acc[expense.currency].paid += paidAmount
+      acc[expense.currency].unpaid += expense.amount - paidAmount
+      if (isPartiallyPaid(expense, paidAmount)) {
+        acc[expense.currency].partial += 1
+      }
+      return acc
+    },
+    {} as Record<Currency, { total: number; paid: number; unpaid: number; partial: number }>,
+  )
 
   return (
     <div className="min-h-screen bg-background">
@@ -217,7 +227,10 @@ function AppContent() {
               <CardContent className="space-y-4">
                 {Object.entries(expensesByCurrency).length > 0 ? (
                   Object.entries(expensesByCurrency).map(([currency, totals]) => (
-                    <div key={currency} className="space-y-2 pb-3 border-b border-border last:border-0 last:pb-0">
+                    <div
+                      key={currency}
+                      className="space-y-2 pb-3 border-b border-border last:border-0 last:pb-0"
+                    >
                       <div className="text-sm font-medium text-muted-foreground">{currency}</div>
                       <div className="flex justify-between items-center">
                         <span className="text-muted-foreground flex items-center gap-1">
@@ -225,7 +238,8 @@ function AppContent() {
                           Total
                         </span>
                         <span className="font-semibold">
-                          {CURRENCY_SYMBOLS[currency as Currency]}{totals.total.toFixed(2)}
+                          {CURRENCY_SYMBOLS[currency as Currency]}
+                          {totals.total.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-green-600 dark:text-green-400">
@@ -234,13 +248,15 @@ function AppContent() {
                           Paid
                         </span>
                         <span className="font-semibold">
-                          {CURRENCY_SYMBOLS[currency as Currency]}{totals.paid.toFixed(2)}
+                          {CURRENCY_SYMBOLS[currency as Currency]}
+                          {totals.paid.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">Remaining</span>
                         <span className="font-semibold">
-                          {CURRENCY_SYMBOLS[currency as Currency]}{totals.unpaid.toFixed(2)}
+                          {CURRENCY_SYMBOLS[currency as Currency]}
+                          {totals.unpaid.toFixed(2)}
                         </span>
                       </div>
                       {totals.partial > 0 && (
@@ -290,8 +306,11 @@ function AppContent() {
                   </div>
                 )}
                 <div className="space-y-1">
-                  {payDays.sort().map(date => (
-                    <div key={date} className="flex items-center justify-between text-sm p-2 bg-green-500/10 rounded">
+                  {payDays.sort().map((date) => (
+                    <div
+                      key={date}
+                      className="flex items-center justify-between text-sm p-2 bg-green-500/10 rounded"
+                    >
                       <span>{new Date(date).toLocaleDateString()}</span>
                       <Button
                         variant="ghost"

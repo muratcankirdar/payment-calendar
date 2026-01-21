@@ -103,9 +103,7 @@ export function useExpenses() {
         .eq('user_id', user.id)
 
       if (error) throw error
-      setExpenses((prev) =>
-        prev.map((e) => (e.id === id ? { ...expense, id } : e))
-      )
+      setExpenses((prev) => prev.map((e) => (e.id === id ? { ...expense, id } : e)))
       return true
     } catch (err) {
       setError(err as Error)
@@ -117,11 +115,7 @@ export function useExpenses() {
     if (!user) return false
 
     try {
-      const { error } = await supabase
-        .from('expenses')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user.id)
+      const { error } = await supabase.from('expenses').delete().eq('id', id).eq('user_id', user.id)
 
       if (error) throw error
       setExpenses((prev) => prev.filter((e) => e.id !== id))

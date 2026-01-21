@@ -48,7 +48,7 @@ export const getRemainingAmount = (expense: Expense, paidAmount?: number): numbe
 export const getPaidAmountForExpense = (
   expense: Expense,
   monthKey: string,
-  monthlyPayments: Record<string, number>
+  monthlyPayments: Record<string, number>,
 ): number => {
   if (expense.isRecurring) {
     return monthlyPayments[`${expense.id}-${monthKey}`] ?? 0

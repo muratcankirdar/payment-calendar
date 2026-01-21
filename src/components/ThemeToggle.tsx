@@ -1,12 +1,12 @@
-import { Moon, Sun, Monitor } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Moon, Sun, Monitor } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useStore } from "@/store/useStore"
+} from '@/components/ui/dropdown-menu'
+import { useStore } from '@/store/useStore'
 
 export function ThemeToggle() {
   const theme = useStore((state) => state.theme)
@@ -22,15 +22,24 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")} className={theme === "light" ? "bg-accent" : ""}>
+        <DropdownMenuItem
+          onClick={() => setTheme('light')}
+          className={theme === 'light' ? 'bg-accent' : ''}
+        >
           <Sun className="mr-2 h-4 w-4" />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className={theme === "dark" ? "bg-accent" : ""}>
+        <DropdownMenuItem
+          onClick={() => setTheme('dark')}
+          className={theme === 'dark' ? 'bg-accent' : ''}
+        >
           <Moon className="mr-2 h-4 w-4" />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className={theme === "system" ? "bg-accent" : ""}>
+        <DropdownMenuItem
+          onClick={() => setTheme('system')}
+          className={theme === 'system' ? 'bg-accent' : ''}
+        >
           <Monitor className="mr-2 h-4 w-4" />
           System
         </DropdownMenuItem>
